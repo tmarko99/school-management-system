@@ -1,5 +1,3 @@
-const bcrypt = require('bcryptjs');
-
 const AsyncHandler = require('express-async-handler');
 const generateToken = require('../../utils/generateToken');
 const { hashPassword, isPasswordMatch } = require('../../utils/helpers');
@@ -60,7 +58,9 @@ exports.getAllAdmins = AsyncHandler(async (req, res, next) => {
 exports.getAdminProfile = AsyncHandler(async (req, res, next) => {
     const adminId = req.userId;
     console.log(adminId);
-    const admin = await Admin.findById(adminId).select('-password -createdAt -updatedAt');
+    const admin = await Admin.findById(adminId)
+        .select('-password -createdAt -updatedAt')
+        .populate('academicYears');
 
     if (!admin) {
         const error = new Error('Admin not found!');
