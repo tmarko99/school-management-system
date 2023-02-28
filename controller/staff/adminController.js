@@ -1,5 +1,8 @@
 const bcrypt = require('bcryptjs');
+
 const AsyncHandler = require('express-async-handler');
+const generateToken = require('../../utils/generateToken');
+const { hashPassword, isPasswordMatch } = require('../../utils/helpers');
 
 const Admin = require('../../model/Staff/Admin');
 
@@ -13,8 +16,8 @@ exports.registerAdmin = AsyncHandler(async (req, res, next) => {
         error.statusCode = 409;
         throw error;
     }
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const hashedPassword = await hashPassword(password);
 
     const admin = await Admin.create({ name, email, password: hashedPassword });
 
@@ -29,11 +32,39 @@ exports.loginAdmin = AsyncHandler(async (req, res, next) => {
 
     const admin = await Admin.findOne({ email });
 
-    const isPasswordValid = await bcrypt.compare(password, admin.password);
+    const isPasswordValid = isPasswordMatch(password, admin.password);
 
     if (!admin || !isPasswordValid) {
-        const error = new Error('Invalid email or password');
+        const error = new Error('Invalid login credentials!');
         error.statusCode = 401;
+        throw error;
+    }
+
+    const token = generateToken(admin._id, admin.email);
+
+    res.status(200).json({
+        status: 'Success',
+        token
+    });
+});
+
+exports.getAllAdmins = AsyncHandler(async (req, res, next) => {
+    const admins = await Admin.find().select('-password -createdAt -updatedAt');
+
+    res.status(200).json({
+        status: 'Success',
+        data: admins
+    })
+});
+
+exports.getAdminProfile = AsyncHandler(async (req, res, next) => {
+    const adminId = req.userId;
+    console.log(adminId);
+    const admin = await Admin.findById(adminId).select('-password -createdAt -updatedAt');
+
+    if (!admin) {
+        const error = new Error('Admin not found!');
+        error.statusCode = 404;
         throw error;
     }
 
@@ -43,17 +74,41 @@ exports.loginAdmin = AsyncHandler(async (req, res, next) => {
     });
 });
 
-exports.getAllAdmins = (req, res, next) => {
-    
-}
+exports.updateAdmin = AsyncHandler(async (req, res, next) => {
+    const { name, email, password } = req.body;
 
-exports.getAdmin = (req, res, next) => {
-    
-}
+    const admin = await Admin.findById(adminId);
 
-exports.updateAdmin = (req, res, next) => {
-    
-}
+    const emailExists = await Admin.findOne({ email });
+
+    if (!admin) {
+        const error = new Error('Admin not found!');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    if (emailExists) {
+        const error = new Error('This email is taken!');
+        error.statusCode = 409;
+        throw error;
+    }
+
+    let updatedadmin;
+
+    if (password) {
+        const hashedPassword = await hashPassword(password);
+
+        updatedadmin = await Admin.findByIdAndUpdate(req.userId, { name, email, password: hashedPassword }, { new: true, runValidators: true });
+    }
+
+    updatedadmin = await Admin.findByIdAndUpdate(req.userId, { name, email }, { new: true, runValidators: true });
+
+    res.status(200).json({
+        status: 'Success',
+        data: updatedAdmin
+    });
+
+});
 
 exports.deleteAdmin = (req, res, next) => {
     
