@@ -1,1 +1,1 @@
-# school-medical-system
+# school-management-system
