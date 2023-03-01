@@ -10,6 +10,6 @@ router.post('/', isAuth, isAdmin, academicYearController.createAcademicYear);
 router.get('/', isAuth, isAdmin, academicYearController.getAllAcademicYears);
 router.get('/:id', isAuth, isAdmin, academicYearController.getAcademicYear);
 router.put('/:id', isAuth, isAdmin, academicYearController.updateAcademicYear);
-router.put('/:id', isAuth, isAdmin, academicYearController.deleteAcademicYear);
+router.delete('/:id', isAuth, isAdmin, academicYearController.deleteAcademicYear);
 
 module.exports = router;

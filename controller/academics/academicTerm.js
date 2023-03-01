@@ -18,6 +18,11 @@ exports.createAcademicTerm = AsyncHandler(async (req, res, next) => {
     });
 
     const admin = await Admin.findById(req.userId);
+    if (!admin) {
+        const error = new Error('Admin not found!');
+        error.statusCode = 404;
+        throw error;
+    }
     admin.academicTerms.push(createdAcademicTerm._id);
     await admin.save();
     
@@ -70,7 +75,7 @@ exports.updateAcademicTerm = AsyncHandler(async (req, res, next) => {
         throw error;
     }
 
-    updatedAcademicTerm = await AcademicTerm.findByIdAndUpdate(req.params.id, 
+    const updatedAcademicTerm = await AcademicTerm.findByIdAndUpdate(req.params.id, 
         { name, description, duration, createdBy: req.userId }, 
         { new: true, runValidators: true }
     );

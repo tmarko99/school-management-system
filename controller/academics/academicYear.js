@@ -18,6 +18,11 @@ exports.createAcademicYear = AsyncHandler(async (req, res, next) => {
     });
 
     const admin = await Admin.findById(req.userId);
+    if (!admin) {
+        const error = new Error('Admin not found!');
+        error.statusCode = 404;
+        throw error;
+    }
     admin.academicYears.push(createdAcademicYear._id);
     await admin.save();
 
@@ -70,7 +75,7 @@ exports.updateAcademicYear = AsyncHandler(async (req, res, next) => {
         throw error;
     }
 
-    updatedAcademicYear = await AcademicYear.findByIdAndUpdate(req.params.id, 
+    const updatedAcademicYear = await AcademicYear.findByIdAndUpdate(req.params.id, 
         { name, fromYear, toYear, createdBy: req.userId }, 
         { new: true, runValidators: true }
     );

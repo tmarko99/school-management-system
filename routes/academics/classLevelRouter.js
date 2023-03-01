@@ -10,6 +10,6 @@ router.post('/', isAuth, isAdmin, classLevelController.createClassLevel);
 router.get('/', isAuth, isAdmin, classLevelController.getAllClassLevels);
 router.get('/:id', isAuth, isAdmin, classLevelController.getClassLevel);
 router.put('/:id', isAuth, isAdmin, classLevelController.updateClassLevel);
-router.put('/:id', isAuth, isAdmin, classLevelController.deleteClassLevel);
+router.delete('/:id', isAuth, isAdmin, classLevelController.deleteClassLevel);
 
 module.exports = router;

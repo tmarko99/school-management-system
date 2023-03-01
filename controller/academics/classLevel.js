@@ -18,6 +18,11 @@ exports.createClassLevel = AsyncHandler(async (req, res, next) => {
     });
 
     const admin = await Admin.findById(req.userId);
+    if (!admin) {
+        const error = new Error('Admin not found!');
+        error.statusCode = 404;
+        throw error;
+    }
     admin.classLevels.push(createdClassLevel._id);
     await admin.save();
     
@@ -57,7 +62,7 @@ exports.updateClassLevel = AsyncHandler(async (req, res, next) => {
     const classLevel = await ClassLevel.findById(req.params.id);
 
     if (!classLevel) {
-        const error = new Error('Academic term not found!');
+        const error = new Error('Class level not found!');
         error.statusCode = 404;
         throw error;
     }
@@ -70,7 +75,7 @@ exports.updateClassLevel = AsyncHandler(async (req, res, next) => {
         throw error;
     }
 
-    updatedClassLevel = await ClassLevel.findByIdAndUpdate(req.params.id, 
+    const updatedClassLevel = await ClassLevel.findByIdAndUpdate(req.params.id, 
         { name, description, createdBy: req.userId }, 
         { new: true, runValidators: true }
     );
