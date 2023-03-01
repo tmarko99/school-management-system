@@ -20,7 +20,7 @@ exports.createAcademicYear = AsyncHandler(async (req, res, next) => {
     const admin = await Admin.findById(req.userId);
     admin.academicYears.push(createdAcademicYear._id);
     await admin.save();
-    
+
     res.status(201).json({
         status: 'Success',
         data: createdAcademicYear
@@ -70,7 +70,10 @@ exports.updateAcademicYear = AsyncHandler(async (req, res, next) => {
         throw error;
     }
 
-    updatedAcademicYear = await AcademicYear.findByIdAndUpdate(req.params.id, { name, fromYear, toYear, createdBy: req.userId }, { new: true, runValidators: true });
+    updatedAcademicYear = await AcademicYear.findByIdAndUpdate(req.params.id, 
+        { name, fromYear, toYear, createdBy: req.userId }, 
+        { new: true, runValidators: true }
+    );
 
     res.status(200).json({
         status: 'Success',
