@@ -1,6 +1,6 @@
 const AsyncHandler = require('express-async-handler');
-const ClassLevel = require('../../model/Academic/ClassLevel');
-const Admin = require('../../model/Staff/Admin');
+const ClassLevel = require('../../model/academic/ClassLevel');
+const Admin = require('../../model/staff/Admin');
 
 exports.createClassLevel = AsyncHandler(async (req, res, next) => {
     const { name, description } = req.body;

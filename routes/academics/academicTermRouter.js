@@ -1,8 +1,8 @@
 const express = require('express');
 
 const academicTermController = require('../../controller/academics/academicTerm');
-const isAuth = require('../../middlewares/is-auth');
-const isAdmin = require('../../middlewares/is-admin');
+const isAuth = require('../../middlewares/isAuth');
+const isAdmin = require('../../middlewares/isAdmin');
 
 const router = express.Router();
 

@@ -1,5 +1,4 @@
-const jwt = require('jsonwebtoken');
-const Admin = require('../model/Staff/Admin');
+const Admin = require('../model/staff/Admin');
 
 module.exports = async (req, res, next) => {
     const adminId = req.userId;

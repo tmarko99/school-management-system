@@ -1,6 +1,6 @@
 const AsyncHandler = require('express-async-handler');
-const AcademicTerm = require('../../model/Academic/AcademicTerm');
-const Admin = require('../../model/Staff/Admin');
+const AcademicTerm = require('../../model/academic/AcademicTerm');
+const Admin = require('../../model/staff/Admin');
 
 exports.createAcademicTerm = AsyncHandler(async (req, res, next) => {
     const { name, description, duration } = req.body;

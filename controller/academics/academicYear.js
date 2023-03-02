@@ -1,6 +1,6 @@
 const AsyncHandler = require('express-async-handler');
-const AcademicYear = require('../../model/Academic/AcademicYear');
-const Admin = require('../../model/Staff/Admin');
+const AcademicYear = require('../../model/academic/AcademicYear');
+const Admin = require('../../model/staff/Admin');
 
 exports.createAcademicYear = AsyncHandler(async (req, res, next) => {
     const {name, fromYear, toYear } = req.body;

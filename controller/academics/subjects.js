@@ -1,6 +1,6 @@
 const AsyncHandler = require('express-async-handler');
-const Subject = require('../../model/Academic/Subject');
-const AcademicTerm = require('../../model/Academic/AcademicTerm');
+const Subject = require('../../model/academic/Subject');
+const AcademicTerm = require('../../model/academic/AcademicTerm');
 
 exports.createSubject = AsyncHandler(async (req, res, next) => {
     const programId = req.params.programId;

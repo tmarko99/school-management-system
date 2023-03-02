@@ -4,6 +4,8 @@ const morgan = require('morgan');
 const { globalErrHandler, notFoundErr } = require('../middlewares/globalErrHandler');
 
 const adminRouter = require('../routes/staff/adminRouter');
+const teacherRouter = require('../routes/staff/teacherRouter');
+
 const academicYearRouter = require('../routes/academics/academicYearRouter');
 const academicTermRouter = require('../routes/academics/academicTermRouter');
 const classLevelRouter = require('../routes/academics/classLevelRouter');
@@ -25,6 +27,7 @@ app.use('/api/v1/class-levels', classLevelRouter);
 app.use('/api/v1/programs', programRouter);
 app.use('/api/v1/subjects', subjectRouter);
 app.use('/api/v1/year-groups', yearGroupRouter);
+app.use('/api/v1/teachers', teacherRouter);
 
 //Error middleware
 app.use(notFoundErr);

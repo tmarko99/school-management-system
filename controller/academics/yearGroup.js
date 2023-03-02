@@ -1,7 +1,7 @@
 const AsyncHandler = require('express-async-handler');
-const YearGroup = require('../../model/Academic/YearGroup');
-const AcademicYear = require('../../model/Academic/AcademicYear');
-const Admin = require('../../model/Staff/Admin');
+const YearGroup = require('../../model/academic/YearGroup');
+const AcademicYear = require('../../model/academic/AcademicYear');
+const Admin = require('../../model/staff/Admin');
 
 exports.createYearGroup = AsyncHandler(async (req, res, next) => {
     const { name, academicYear } = req.body;

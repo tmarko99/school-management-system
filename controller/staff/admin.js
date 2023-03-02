@@ -2,7 +2,7 @@ const AsyncHandler = require('express-async-handler');
 const generateToken = require('../../utils/generateToken');
 const { hashPassword, isPasswordMatch } = require('../../utils/helpers');
 
-const Admin = require('../../model/Staff/Admin');
+const Admin = require('../../model/staff/Admin');
 
 exports.registerAdmin = AsyncHandler(async (req, res, next) => {
     const { name, email, password } = req.body;
@@ -77,16 +77,8 @@ exports.getAdminProfile = AsyncHandler(async (req, res, next) => {
 exports.updateAdmin = AsyncHandler(async (req, res, next) => {
     const { name, email, password } = req.body;
 
-    const admin = await Admin.findById(adminId);
-
     const emailExists = await Admin.findOne({ email });
-
-    if (!admin) {
-        const error = new Error('Admin not found!');
-        error.statusCode = 404;
-        throw error;
-    }
-
+    
     if (emailExists) {
         const error = new Error('This email is taken!');
         error.statusCode = 409;
@@ -98,7 +90,10 @@ exports.updateAdmin = AsyncHandler(async (req, res, next) => {
     if (password) {
         const hashedPassword = await hashPassword(password);
 
-        updatedadmin = await Admin.findByIdAndUpdate(req.userId, { name, email, password: hashedPassword }, { new: true, runValidators: true });
+        updatedadmin = await Admin.findByIdAndUpdate(req.userId, 
+            { name, email, password: hashedPassword }, 
+            { new: true, runValidators: true }
+        );
     }
 
     updatedadmin = await Admin.findByIdAndUpdate(req.userId, { name, email }, { new: true, runValidators: true });
