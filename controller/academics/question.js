@@ -1,7 +1,6 @@
 const AsyncHandler = require('express-async-handler');
 const Question = require('../../model/academic/Question');
 const Exam = require('../../model/academic/Exam');
-const Teacher = require('../../model/staff/Teacher');
 
 exports.createQuestion = AsyncHandler(async (req, res, next) => {
     const { question, optionA, optionB, optionC, optionD, correctAnswer }  = req.body;

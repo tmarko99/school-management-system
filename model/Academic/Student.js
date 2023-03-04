@@ -39,8 +39,7 @@ const studentSchema = new Schema(
     //keep track of the class level the student is in
     classLevels: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "ClassLevel",
+        type: String
       },
     ],
     currentClassLevel: {
@@ -108,7 +107,7 @@ const studentSchema = new Schema(
     // ],
     //year group
     yearGraduated: {
-      type: String,
+      type: Date,
     },
   },
   {

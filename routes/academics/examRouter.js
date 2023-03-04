@@ -10,6 +10,5 @@ router.post('/', isAuth, isTeacher, examController.createExam);
 router.get('/', isAuth, isTeacher, examController.getAllExams);
 router.get('/:id', isAuth, isTeacher, examController.getExam);
 router.put('/:id', isAuth, isTeacher, examController.updateExam);
-// router.delete('/:id', isAuth, isTeacher, examController.deleteSubject);
 
 module.exports = router;

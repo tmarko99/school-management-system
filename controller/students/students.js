@@ -3,7 +3,8 @@ const generateToken = require('../../utils/generateToken');
 const { hashPassword, isPasswordMatch } = require('../../utils/helpers');
 
 const Student = require('../../model/academic/Student');
-
+const Exam = require('../../model/academic/Exam');
+const ExamResult = require('../../model/academic/ExamResult');
 
 exports.registerStudent = AsyncHandler(async (req, res, next) => {
     const { name, email, password, classLevel, academicYear, program } = req.body;
@@ -127,9 +128,9 @@ exports.updateStudentProfile = AsyncHandler(async (req, res, next) => {
 
 exports.adminUpdateStudentProfile = AsyncHandler(async (req, res, next) => {
     const studentId = req.params.studentId;
-    const { program, classLevel, academicYear, name, email, prefectName } = req.body;
+    const { program, classLevels, academicYear, name, email, prefectName, isSuspended, isWithdrawn } = req.body;
 
-    const student = await Teacher.findById(studentId);
+    const student = await Student.findById(studentId);
 
     if (!student) {
         const error = new Error('Student not found!');
@@ -141,7 +142,7 @@ exports.adminUpdateStudentProfile = AsyncHandler(async (req, res, next) => {
     const updatedStudent = await Student.findByIdAndUpdate(studentId, 
         { 
             $set: {
-                program, academicYear, name, email, prefectName
+                program, academicYear, name, email, prefectName, isSuspended, isWithdrawn
             },
             $addToSet: {
                 classLevels
@@ -157,5 +158,127 @@ exports.adminUpdateStudentProfile = AsyncHandler(async (req, res, next) => {
 
 });
 
+exports.writeExam = AsyncHandler(async (req, res, next) => {
+    const student = await Student.findById(req.userId);
 
+    if (!student) {
+        const error = new Error('Student not found!');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    const exam = await Exam.findById(req.params.examId)
+        .populate('questions')
+        .populate('academicTerm');
+
+    if (!exam) {
+        const error = new Error('Exam not found!');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    const questions = exam.questions;
+
+    const answers = req.body.answers;
+
+    // if (answers.length !== questions.length) {
+    //     const error = new Error('You have not answered all the questions!');
+    //     error.statusCode = 400;
+    //     throw error;
+    // }
+ 
+    const studentFoundInResults = await ExamResult.findOne({ student: student._id });
+
+    if (studentFoundInResults) {
+        const error = new Error('You have already written this exam');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    if (student.isSuspended || student.isSuspended) {
+        const error = new Error('You are suspended/withdrawn, you cant take this exam');
+        error.statusCode = 404;
+        throw error;
+    }
+
+    let correctAnswers = 0;
+    let wrongAnswers = 0;
+    let status;
+    let remarks;
+    let grade = 0;
+    let score = 0;
+    // let answeredQuestions = [];
+
+    for (let i = 0; i < questions.length; i++) {
+        const question = questions[i];
+
+        if (question.correctAnswer === answers[i]) {
+            correctAnswers++;
+            score++;
+            question.isCorrect = false;
+        } else {
+            wrongAnswers++;
+        }
+    }
+
+    grade = (correctAnswers / questions.length) * 100;
+
+    if (grade > 50) {
+        status = 'Pass';
+    } else {
+        status = 'Fail';
+    }
+
+    if (grade >= 80) {
+        remarks = 'Excellent';
+    } else if (grade >= 70) {
+        remarks = 'Very good';
+    } else if (grade >= 60) {
+        remarks = 'Good';
+    } else if (grade >= 50) {
+        remarks = 'Fail';
+    } else {
+        remarks = 'Poor';
+    }
+
+    const examResult = await ExamResult.create({
+        student: student._id,
+        exam: exam._id,
+        grade,
+        score,
+        remarks,
+        classLevel: exam.classLevel,
+        academicTerm: exam.academicTerm,
+        academicYear: exam.academicYear
+    });
+
+    if (exam.academicTerm.name === '3rd term' && status === 'pass' && student.currentClassLevel === 'Level 100') {
+        student.classLevels.push('Level 200');
+        student.currentClassLevel = 'Level 200';
+    }
+
+    if (exam.academicTerm.name === '3rd term' && status === 'pass' && student.currentClassLevel === 'Level 200') {
+        student.classLevels.push('Level 300');
+        student.currentClassLevel = 'Level 300';
+    }
+
+    if (exam.academicTerm.name === '3rd term' && status === 'pass' && student.currentClassLevel === 'Level 300') {
+        student.classLevels.push('Level 400');
+        student.currentClassLevel = 'Level 400';
+    }
+
+    if (exam.academicTerm.name === '3rd term' && status === 'pass' && student.currentClassLevel === 'Level 400') {
+        student.isGraduated = true;
+        student.yearGraduated = new Date();
+    }
+
+    student.examResults.push(examResult._id);
+    await student.save();
+
+    res.status(200).json({
+        status: 'Success',
+        data: 'You have submited your exam. Check later for the results'
+    });
+
+});
 

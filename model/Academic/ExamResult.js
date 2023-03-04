@@ -30,14 +30,14 @@ const examResultSchema = new Schema(
     status: {
       type: String,
       required: true,
-      enum: ["failed", "passed"],
-      default: "failed",
+      enum: ["fail", "pass"],
+      default: "fail",
     },
     //Excellent/Good/Poor
     remarks: {
       type: String,
       required: true,
-      enum: ["Excellent", "Good", "Poor"],
+      enum: ["Excellent", "Good", "Fair", "Poor"],
       default: "Poor",
     },
     position: {

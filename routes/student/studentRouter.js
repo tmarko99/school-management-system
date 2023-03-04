@@ -28,5 +28,8 @@ router.put('/', isAuth, isStudent, studentController.updateStudentProfile);
 //admin update student
 router.put('/:studentId/update', isAuth, isAdmin, studentController.adminUpdateStudentProfile);
 
+//take exam
+router.post('/exam/:examId/write', isAuth, isStudent, studentController.writeExam);
+
 
 module.exports = router;
