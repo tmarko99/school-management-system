@@ -38,7 +38,12 @@ exports.createExam = AsyncHandler(async (req, res, next) => {
 });
 
 exports.getAllExams = AsyncHandler(async (req, res, next) => {
-    const exams = await Exam.find();
+    const exams = await Exam.find().populate({
+        path: 'questions',
+        populate: {
+            path: 'createdBy'
+        }
+    });
 
     res.status(200).json({
         status: 'Success',

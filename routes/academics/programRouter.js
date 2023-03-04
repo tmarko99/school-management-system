@@ -1,6 +1,6 @@
 const express = require('express');
 
-const programController = require('../../controller/academics/programs');
+const programController = require('../../controller/academics/program');
 const isAuth = require('../../middlewares/isAuth');
 const isAdmin = require('../../middlewares/isAdmin');
 
