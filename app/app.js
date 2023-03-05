@@ -7,6 +7,7 @@ const adminRouter = require('../routes/staff/adminRouter');
 const teacherRouter = require('../routes/staff/teacherRouter');
 
 const studentRouter = require('../routes/student/studentRouter');
+const examResultRouter = require('../routes/academics/examResultRoute');
 
 const academicYearRouter = require('../routes/academics/academicYearRouter');
 const academicTermRouter = require('../routes/academics/academicTermRouter');
@@ -35,6 +36,7 @@ app.use('/api/v1/teachers', teacherRouter);
 app.use('/api/v1/exams', examRouter);
 app.use('/api/v1/students', studentRouter);
 app.use('/api/v1/questions', questionRouter);
+app.use('/api/v1/exam-results', examResultRouter);
 
 //Error middleware
 app.use(notFoundErr);

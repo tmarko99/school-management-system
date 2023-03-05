@@ -57,10 +57,16 @@ exports.getAllAdmins = AsyncHandler(async (req, res, next) => {
 
 exports.getAdminProfile = AsyncHandler(async (req, res, next) => {
     const adminId = req.userId;
-    console.log(adminId);
+
     const admin = await Admin.findById(adminId)
         .select('-password -createdAt -updatedAt')
-        .populate('academicYears');
+        .populate('academicYears')
+        .populate('academicTerms')
+        .populate('programs')
+        .populate('yearGroups')
+        .populate('teachers')
+        .populate('students', '-password')
+        .populate('classLevels', '-password');
 
     if (!admin) {
         const error = new Error('Admin not found!');
@@ -78,7 +84,7 @@ exports.updateAdmin = AsyncHandler(async (req, res, next) => {
     const { name, email, password } = req.body;
 
     const emailExists = await Admin.findOne({ email });
-    
+
     if (emailExists) {
         const error = new Error('This email is taken!');
         error.statusCode = 409;

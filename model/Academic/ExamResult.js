@@ -3,9 +3,8 @@ const Schema = mongoose.Schema;
 
 const examResultSchema = new Schema(
   {
-    student: {
-      type: Schema.Types.ObjectId,
-      ref: "Student",
+    studentId: {
+      type: String,
       required: true,
     },
     exam: {
@@ -26,6 +25,11 @@ const examResultSchema = new Schema(
       required: true,
       default: 50,
     },
+    answeredQuestions: [
+      {
+        type: Object,
+      }
+    ],
     //failed/Passed
     status: {
       type: String,

@@ -3,11 +3,20 @@ const generateToken = require('../../utils/generateToken');
 const { hashPassword, isPasswordMatch } = require('../../utils/helpers');
 
 const Student = require('../../model/academic/Student');
+const Admin = require('../../model/staff/Admin');
 const Exam = require('../../model/academic/Exam');
 const ExamResult = require('../../model/academic/ExamResult');
 
 exports.registerStudent = AsyncHandler(async (req, res, next) => {
     const { name, email, password, classLevel, academicYear, program } = req.body;
+
+    const admin = await Admin.findById(req.userId);
+
+    if (!admin) {
+        const error = new Error('Admin not found!');
+        error.statusCode = 404;
+        throw error;
+    }
 
     const studentFound = await Student.findOne({ email });
 
@@ -20,6 +29,9 @@ exports.registerStudent = AsyncHandler(async (req, res, next) => {
     const hashedPassword = await hashPassword(password);
 
     const student = await Student.create({ name, email, classLevel, academicYear, program, password: hashedPassword });
+
+    admin.students.push(student._id);
+    await admin.save();
 
     res.status(201).json({
         status: 'Success',
@@ -78,7 +90,8 @@ exports.getStudent = AsyncHandler(async (req, res, next) => {
 
 exports.getStudentProfile = AsyncHandler(async (req, res, next) => {
     const student = await Student.findById(req.userId)
-        .select('-password -createdAt -updatedAt');
+        .select('-password -createdAt -updatedAt')
+        .populate('examResult');
 
     if (!student) {
         const error = new Error('Student not found!');
@@ -86,9 +99,28 @@ exports.getStudentProfile = AsyncHandler(async (req, res, next) => {
         throw error;
     }
 
+    const studentProfile = {
+        name: student.name,
+        email: student.email,
+        currentClassLevel: student.currentClassLevel,
+        program: student.program,
+        dateAdmitted: student.dateAdmitted,
+        isSuspended: student.isSuspended,
+        isWithdrawn: student.isWithdrawn,
+        studentId: student.studentId,
+        prefectName: student.prefectName
+    }
+
+    const examResults = student.examResults;
+    const currentExamResult = examResults[examResults.length - 1];
+    const isPublished = currentExamResult.isPublished;
+
     res.status(200).json({
         status: 'Success',
-        data: student
+        data: {
+            studentProfile,
+            currentExamResult: isPublished ? currentExamResult : []
+        }
     });
 });
 
@@ -207,7 +239,7 @@ exports.writeExam = AsyncHandler(async (req, res, next) => {
     let remarks;
     let grade = 0;
     let score = 0;
-    // let answeredQuestions = [];
+    let answeredQuestions = [];
 
     for (let i = 0; i < questions.length; i++) {
         const question = questions[i];
@@ -222,6 +254,13 @@ exports.writeExam = AsyncHandler(async (req, res, next) => {
     }
 
     grade = (correctAnswers / questions.length) * 100;
+    answeredQuestions = questions.map(question => {
+        return {
+            question: question.question,
+            correctAnswer: question.correctAnswer,
+            isCorrect: question.isCorrect
+        }
+    })
 
     if (grade > 50) {
         status = 'Pass';
@@ -242,14 +281,15 @@ exports.writeExam = AsyncHandler(async (req, res, next) => {
     }
 
     const examResult = await ExamResult.create({
-        student: student._id,
+        studentId: student.studentId,
         exam: exam._id,
         grade,
         score,
         remarks,
         classLevel: exam.classLevel,
         academicTerm: exam.academicTerm,
-        academicYear: exam.academicYear
+        academicYear: exam.academicYear,
+        answeredQuestions
     });
 
     if (exam.academicTerm.name === '3rd term' && status === 'pass' && student.currentClassLevel === 'Level 100') {

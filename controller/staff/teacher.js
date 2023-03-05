@@ -3,9 +3,18 @@ const generateToken = require('../../utils/generateToken');
 const { hashPassword, isPasswordMatch } = require('../../utils/helpers');
 
 const Teacher = require('../../model/staff/Teacher');
+const Admin = require('../../model/staff/Admin');
 
 exports.registerTeacher = AsyncHandler(async (req, res, next) => {
     const { name, email, password } = req.body;
+    
+    const admin = await Admin.findById(req.userId);
+
+    if (!admin) {
+        const error = new Error('Admin not found!');
+        error.statusCode = 404;
+        throw error;
+    }
 
     const teacherFound = await Teacher.findOne({ email });
 
@@ -18,6 +27,9 @@ exports.registerTeacher = AsyncHandler(async (req, res, next) => {
     const hashedPassword = await hashPassword(password);
 
     const teacher = await Teacher.create({ name, email, password: hashedPassword });
+
+    admin.teachers.push(teacher._id);
+    await admin.save();
 
     res.status(201).json({
         status: 'Success',
