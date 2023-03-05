@@ -61,12 +61,13 @@ exports.loginStudent = AsyncHandler(async (req, res, next) => {
 });
 
 exports.getAllStudents = AsyncHandler(async (req, res, next) => {
-    const students = await Student.find().select('-password -createdAt -updatedAt');
+    // const students = await Student.find().select('-password -createdAt -updatedAt');
 
-    res.status(200).json({
-        status: 'Success',
-        data: students
-    })
+    // res.status(200).json({
+    //     status: 'Success',
+    //     data: students
+    // })
+    res.status(200).json(res.results);
 });
 
 exports.getStudent = AsyncHandler(async (req, res, next) => {

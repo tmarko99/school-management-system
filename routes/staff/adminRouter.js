@@ -1,9 +1,11 @@
 const express = require('express');
 
-const adminController = require('../../controller/staff/admin');
+const adminController = require('../../controller/staff/adminController');
 const isAuth = require('../../middlewares/isAuth');
 const isAdmin = require('../../middlewares/isAdmin');
- 
+const advancedResults = require('../../middlewares/advancedResults');
+const Admin = require('../../model/staff/Admin');
+
 const adminRouter = express.Router();
 
 //register
@@ -13,7 +15,7 @@ adminRouter.post('/register', adminController.registerAdmin);
 adminRouter.post('/login', adminController.loginAdmin);
 
 //get all
-adminRouter.get('/', isAuth, adminController.getAllAdmins);
+adminRouter.get('/', isAuth, advancedResults(Admin), adminController.getAllAdmins);
 
 //get single
 adminRouter.get('/profile', isAuth, isAdmin, adminController.getAdminProfile);

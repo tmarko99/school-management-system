@@ -7,7 +7,7 @@ const Admin = require('../../model/staff/Admin');
 
 exports.registerTeacher = AsyncHandler(async (req, res, next) => {
     const { name, email, password } = req.body;
-    
+
     const admin = await Admin.findById(req.userId);
 
     if (!admin) {
@@ -59,12 +59,48 @@ exports.loginTeacher = AsyncHandler(async (req, res, next) => {
 });
 
 exports.getAllTeachers = AsyncHandler(async (req, res, next) => {
-    const teachers = await Teacher.find().select('-password -createdAt -updatedAt');
+    // let teacherQuery = Teacher.find();
+    // const currentPage = req.query.page || 1;
+    // const perPage = 2;
 
-    res.status(200).json({
-        status: 'Success',
-        data: teachers
-    })
+    // const total = await Teacher.countDocuments();
+    // const startIndex = (currentPage - 1) * perPage;
+    // const endIndex = currentPage * perPage;
+
+    // if (req.query.name) {
+    //     teacherQuery.find({
+    //         name: { $regex: req.query.name, $options: 'i' }
+    //     });
+    // }
+
+    // const pagination = {};
+
+    // if (endIndex < total) {
+    //     pagination.next = {
+    //         currentPage: currentPage + 1,
+    //         perPage
+    //     }
+    // }
+
+    // if (startIndex > 0) {
+    //     pagination.prev = {
+    //         currentPage: currentPage - 1,
+    //         perPage
+    //     }
+    // }
+
+    // const teachers = await teacherQuery.find().select('-password')
+    //     .skip((currentPage - 1) * perPage)
+    //     .limit(perPage);
+
+    // res.status(200).json({
+    //     status: 'Success',
+    //     data: teachers,
+    //     total,
+    //     pagination
+    // });
+
+    res.status(200).json(res.results);
 });
 
 exports.getTeacher = AsyncHandler(async (req, res, next) => {

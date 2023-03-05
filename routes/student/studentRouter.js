@@ -1,9 +1,11 @@
 const express = require('express');
 
-const studentController = require('../../controller/students/students');
+const studentController = require('../../controller/students/studentController');
 const isAuth = require('../../middlewares/isAuth');
 const isAdmin = require('../../middlewares/isAdmin');
 const isStudent = require('../../middlewares/isStudent');
+const Student = require('../../model/academic/Student');
+const advancedResults = require('../../middlewares/advancedResults');
  
 const router = express.Router();
 
@@ -14,7 +16,7 @@ router.post('/register', isAuth, isAdmin, studentController.registerStudent);
 router.post('/login', studentController.loginStudent);
 
 //get all
-router.get('/', isAuth, isAdmin, studentController.getAllStudents);
+router.get('/', isAuth, isAdmin, advancedResults(Student), studentController.getAllStudents);
 
 //get single
 router.get('/:studentId', isAuth, isAdmin, studentController.getStudent);

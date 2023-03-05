@@ -1,9 +1,11 @@
 const express = require('express');
 
-const teacherController = require('../../controller/staff/teacher');
+const teacherController = require('../../controller/staff/teacherController');
 const isAuth = require('../../middlewares/isAuth');
 const isAdmin = require('../../middlewares/isAdmin');
 const isTeacher = require('../../middlewares/isTeacher');
+const Teacher = require('../../model/staff/Teacher');
+const advancedResults = require('../../middlewares/advancedResults');
  
 const router = express.Router();
 
@@ -14,7 +16,17 @@ router.post('/register', isAuth, isAdmin, teacherController.registerTeacher);
 router.post('/login', teacherController.loginTeacher);
 
 //get all
-router.get('/', isAuth, isAdmin, teacherController.getAllTeachers);
+router.get('/', 
+    isAuth, 
+    isAdmin, 
+    advancedResults(Teacher, {
+        path: 'examCreated',
+        populate: {
+            path: 'questions'
+        }
+    }), 
+    teacherController.getAllTeachers
+);
 
 //get single
 router.get('/:teacherId', isAuth, isAdmin, teacherController.getTeacher);

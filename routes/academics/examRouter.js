@@ -1,6 +1,6 @@
 const express = require('express');
 
-const examController = require('../../controller/academics/exam');
+const examController = require('../../controller/academics/examController');
 const isTeacher = require('../../middlewares/isTeacher');
 const isAuth = require('../../middlewares/isAuth');
 

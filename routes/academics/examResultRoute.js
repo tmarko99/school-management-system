@@ -1,6 +1,6 @@
 const express = require('express');
 
-const examRouterController = require('../../controller/academics/examResult');
+const examRouterController = require('../../controller/academics/examResultController');
 const isStudent = require('../../middlewares/isStudent');
 const isAdmin = require('../../middlewares/isAdmin');
 const isAuth = require('../../middlewares/isAuth');

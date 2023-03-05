@@ -1,6 +1,6 @@
 const express = require('express');
 
-const classLevelController = require('../../controller/academics/classLevel');
+const classLevelController = require('../../controller/academics/classLevelController');
 const isAuth = require('../../middlewares/isAuth');
 const isAdmin = require('../../middlewares/isAdmin');
 
