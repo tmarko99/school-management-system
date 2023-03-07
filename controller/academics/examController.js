@@ -3,7 +3,9 @@ const Exam = require('../../model/academic/Exam');
 const Teacher = require('../../model/staff/Teacher');
 
 exports.createExam = AsyncHandler(async (req, res, next) => {
-    const { name, description, subject, program, academicTerm, duration, examDate, examTime, examType, classLevel, academicYear } = req.body;
+    const { name, description, subject, program, academicTerm, 
+            duration, examDate, examTime, examType, classLevel, academicYear 
+    } = req.body;
 
     const teacher = await Teacher.findById(req.userId);
 
@@ -67,7 +69,9 @@ exports.getExam = AsyncHandler(async (req, res, next) => {
 });
 
 exports.updateExam = AsyncHandler(async (req, res, next) => {
-    const { name, description, subject, program, academicTerm, duration, examDate, examTime, examType, classLevel, academicYear } = req.body;
+    const { name, description, subject, program, academicTerm, 
+            duration, examDate, examTime, examType, classLevel, academicYear 
+    } = req.body;
 
     const subjectFound = await Subject.findById(req.params.id);
 

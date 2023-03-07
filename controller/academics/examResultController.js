@@ -31,7 +31,6 @@ exports.checkExamResult = AsyncHandler(async (req, res, next) => {
         throw error;
     }
 
-
     if (examResult.isPublished === 'false') {
         const error = new Error('Exam result is not available, check out later!');
         error.statusCode = 400;
@@ -42,7 +41,6 @@ exports.checkExamResult = AsyncHandler(async (req, res, next) => {
         status: 'Success',
         data: examResult
     });
-
 });
 
 exports.getAllExamResults = AsyncHandler(async (req, res, next) => {
@@ -66,7 +64,6 @@ exports.adminToggleExamResult = AsyncHandler(async (req, res, next) => {
 
     examResult.isPublished = req.body.publish;
     const updatedExamResult = await examResult.save();
-
 
     res.status(200).json({
         status: 'Success',

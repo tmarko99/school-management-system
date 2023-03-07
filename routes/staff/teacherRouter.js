@@ -24,7 +24,7 @@ router.get('/',
         populate: {
             path: 'questions'
         }
-    }), 
+    }, '-password -createdAt -updatedAt'), 
     teacherController.getAllTeachers
 );
 

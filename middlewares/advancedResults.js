@@ -1,4 +1,4 @@
-const advancedResults = (model, populate) => {
+const advancedResults = (model, populate, select) => {
     return async (req, res, next) => {
         let query = model.find();
         const currentPage = req.query.page || 1;
@@ -33,14 +33,22 @@ const advancedResults = (model, populate) => {
                 perPage
             }
         }
-    
-        const teachers = await query.find().select('-password')
+
+        let results;
+
+        if (select) {
+            results = await query.find().select(select)
             .skip((currentPage - 1) * perPage)
             .limit(perPage);
-
+        } else {
+            results = await query.find()
+            .skip((currentPage - 1) * perPage)
+            .limit(perPage);
+        }
+    
         res.results = {
             status: 'Success',
-            data: teachers,
+            data: results,
             total,
             pagination
         };

@@ -7,7 +7,6 @@ const isAuth = require('../../middlewares/isAuth');
 
 const router = express.Router();
 
-// router.post('/', isAuth, isTeacher, examRouterController.createExam);
 router.get('/', isAuth, isStudent, examRouterController.getAllExamResults);
 router.get('/:id/checking', isAuth, isStudent, examRouterController.checkExamResult);
 router.put('/:id/admin-toggle-publish', isAuth, isAdmin, examRouterController.adminToggleExamResult);

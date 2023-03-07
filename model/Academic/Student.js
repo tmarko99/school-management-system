@@ -93,19 +93,6 @@ const studentSchema = new Schema(
     prefectName: {
       type: String,
     },
-    // behaviorReport: [
-    //   {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "BehaviorReport",
-    //   },
-    // ],
-    // financialReport: [
-    //   {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "FinancialReport",
-    //   },
-    // ],
-    //year group
     yearGraduated: {
       type: Date,
     },

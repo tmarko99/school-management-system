@@ -23,7 +23,6 @@ exports.createQuestion = AsyncHandler(async (req, res, next) => {
         throw error;
     }
 
-
     const createdQuestion = await Question.create({
         question, optionA, optionB, optionC,  optionD, correctAnswer, createdBy: req.userId
     });

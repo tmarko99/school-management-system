@@ -16,7 +16,12 @@ router.post('/register', isAuth, isAdmin, studentController.registerStudent);
 router.post('/login', studentController.loginStudent);
 
 //get all
-router.get('/', isAuth, isAdmin, advancedResults(Student), studentController.getAllStudents);
+router.get('/', 
+    isAuth, 
+    isAdmin, 
+    advancedResults(Student, null, '-password -createdAt -updatedAt'), 
+    studentController.getAllStudents
+);
 
 //get single
 router.get('/:studentId', isAuth, isAdmin, studentController.getStudent);

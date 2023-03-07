@@ -47,12 +47,6 @@ exports.loginAdmin = AsyncHandler(async (req, res, next) => {
 });
 
 exports.getAllAdmins = AsyncHandler(async (req, res, next) => {
-    // const admins = await Admin.find().select('-password -createdAt -updatedAt');
-
-    // res.status(200).json({
-    //     status: 'Success',
-    //     data: admins
-    // })
     res.status(200).json(res.results);
 });
 

@@ -7,8 +7,8 @@ const adminRouter = require('../routes/staff/adminRouter');
 const teacherRouter = require('../routes/staff/teacherRouter');
 
 const studentRouter = require('../routes/student/studentRouter');
-const examResultRouter = require('../routes/academics/examResultRoute');
 
+const examResultRouter = require('../routes/academics/examResultRoute');
 const academicYearRouter = require('../routes/academics/academicYearRouter');
 const academicTermRouter = require('../routes/academics/academicTermRouter');
 const classLevelRouter = require('../routes/academics/classLevelRouter');

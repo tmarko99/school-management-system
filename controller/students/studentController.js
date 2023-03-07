@@ -61,12 +61,6 @@ exports.loginStudent = AsyncHandler(async (req, res, next) => {
 });
 
 exports.getAllStudents = AsyncHandler(async (req, res, next) => {
-    // const students = await Student.find().select('-password -createdAt -updatedAt');
-
-    // res.status(200).json({
-    //     status: 'Success',
-    //     data: students
-    // })
     res.status(200).json(res.results);
 });
 
@@ -171,7 +165,6 @@ exports.adminUpdateStudentProfile = AsyncHandler(async (req, res, next) => {
         throw error;
     }
 
-    
     const updatedStudent = await Student.findByIdAndUpdate(studentId, 
         { 
             $set: {
@@ -255,6 +248,7 @@ exports.writeExam = AsyncHandler(async (req, res, next) => {
     }
 
     grade = (correctAnswers / questions.length) * 100;
+    
     answeredQuestions = questions.map(question => {
         return {
             question: question.question,

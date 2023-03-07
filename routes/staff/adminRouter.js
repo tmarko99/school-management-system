@@ -15,7 +15,12 @@ adminRouter.post('/register', adminController.registerAdmin);
 adminRouter.post('/login', adminController.loginAdmin);
 
 //get all
-adminRouter.get('/', isAuth, advancedResults(Admin), adminController.getAllAdmins);
+adminRouter.get('/', 
+    isAuth,
+    isAdmin,
+    advancedResults(Admin, null, '-password -createdAt -updatedAt'), 
+    adminController.getAllAdmins
+);
 
 //get single
 adminRouter.get('/profile', isAuth, isAdmin, adminController.getAdminProfile);
